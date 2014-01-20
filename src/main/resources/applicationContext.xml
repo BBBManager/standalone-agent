@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<bean id="restletComponent" class="org.restlet.ext.spring.SpringComponent">
+		<property name="defaultTarget" ref="bbbmanager" />
+	</bean>
+	
+	<bean name="router" class="org.restlet.ext.spring.SpringBeanRouter" />
+	<bean id="bbbmanager" class="org.bbbmanager.agent.standalone.rest.RestApp">
+		<property name="inboundRoot" ref="router" />
+	</bean>
+	
+	<bean name="/meetings" class="org.bbbmanager.agent.standalone.resource.MeetingListResource" scope="prototype" autowire="byName" />
+	<bean name="/meetings/" class="org.bbbmanager.agent.standalone.resource.MeetingListResource" scope="prototype" autowire="byName" />
+	
+	<bean name="/meetings/{meetingID}" class="org.bbbmanager.agent.standalone.resource.MeetingResource" scope="prototype" autowire="byName" />
+	<bean name="/meetings/{meetingID}/" class="org.bbbmanager.agent.standalone.resource.MeetingResource" scope="prototype" autowire="byName" />
+	
+	<bean name="/meetings/{meetingID}/end" class="org.bbbmanager.agent.standalone.resource.EndMeetingResource" scope="prototype" autowire="byName" />
+	<bean name="/meetings/{meetingID}/end/" class="org.bbbmanager.agent.standalone.resource.EndMeetingResource" scope="prototype" autowire="byName" />
+	
+	<bean name="/join" class="org.bbbmanager.agent.standalone.resource.JoinResource" scope="prototype" autowire="byName" />
+	<bean name="/join/" class="org.bbbmanager.agent.standalone.resource.JoinResource" scope="prototype" autowire="byName" />
+</beans>
