@@ -40,7 +40,7 @@ public class JoinResource extends SecuredResource {
 			String meetingName = (String) params.getValues("meetingName");
 			String logoutUrl = (String) params.getValues("logoutUrl");
 			Integer maxParticipants = Integer.parseInt(params.getValues("maxParticipants"));
-			Boolean record = params.getValues("record").equals("true");
+			Boolean record = ((String)params.getValues("record")).trim().equals("true") || ((String)params.getValues("record")).trim().equals("1");
 			Integer durationMinutes = Integer.parseInt(params.getValues("durationMinutes"));
 			String userFullName = (String) params.getValues("userFullName");
 			String userId = (String) params.getValues("userId");

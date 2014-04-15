@@ -21,4 +21,14 @@
 	
 	<bean name="/join" class="org.bbbmanager.agent.standalone.resource.JoinResource" scope="prototype" autowire="byName" />
 	<bean name="/join/" class="org.bbbmanager.agent.standalone.resource.JoinResource" scope="prototype" autowire="byName" />
+	
+	<bean name="/recordings" class="org.bbbmanager.agent.standalone.resource.RecordingListResource" scope="prototype" autowire="byName" />
+	<bean name="/recordings/" class="org.bbbmanager.agent.standalone.resource.RecordingListResource" scope="prototype" autowire="byName" />
+	
+	<bean name="/recordings/{recordingID}" class="org.bbbmanager.agent.standalone.resource.RecordingResource" scope="prototype" autowire="byName" />
+	<bean name="/recordings/{recordingID}/" class="org.bbbmanager.agent.standalone.resource.RecordingResource" scope="prototype" autowire="byName" />
+	
+	<bean name="/recordings/byMeeting/{meetingID}" class="org.bbbmanager.agent.standalone.resource.RecordingsByMeetingListResource" scope="prototype" autowire="byName" />
+	<bean name="/recordings/byMeeting/{meetingID}/" class="org.bbbmanager.agent.standalone.resource.RecordingsByMeetingListResource" scope="prototype" autowire="byName" />
+	
 </beans>
