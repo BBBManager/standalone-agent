@@ -1,4 +1,4 @@
-#/etc/bigbluebutton/nginx/bbbmanager.nginx
+#/etc/bigbluebutton/nginx/bbbmanager-agent.nginx
 location /bbbmanager-standalone-agent {
         proxy_pass http://127.0.0.1:8080;
         proxy_redirect     default;
