@@ -33,7 +33,7 @@ public class Configuration extends HttpServlet {
 			configFilePath = System.getenv("BBBMANAGER_CONF");
 		}
 		if(configFilePath == null) {
-			configFilePath = "/opt/bbbmanager/conf/bbbmanager.properties";
+			configFilePath = "/opt/bbbmanager/etc/bbbmanager.properties";
 			String errorMessage = "Not possible to read config location from env var BBBMANAGER_CONF and no config file parsed to JVM (with -Dbbbmanager.configfile), using default location: " + configFilePath;
 			log.info(errorMessage);
 		}
