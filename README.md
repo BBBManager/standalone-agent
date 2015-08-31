@@ -1,7 +1,7 @@
 standalone-agent
 ================
 
-The standalone agent is a webapp that run on tomcat, togheter with bigbluebutton webapp.
+The standalone agent is a webapp that run on tomcat, with bigbluebutton webapp.
 
-To build run
+To build, run
 mvn war:war
