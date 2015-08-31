@@ -15,12 +15,50 @@ This is designed to be used in single BigBlueButton deploys.
       <url>http://maven.restlet.com/</url>
     </repository>
   </repositories>
+
+	<properties>
+	    <restlet-version>2.3.4</restlet-version>
+	</properties>
+
+
   <dependencies>
+
+	<dependency>
+      <groupId>org.ebaysf.web</groupId>
+      <artifactId>cors-filter</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    
+	<dependency>
+      <groupId>org.restlet.jee</groupId>
+      <artifactId>org.restlet.ext.spring</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+    
     <dependency>
       <groupId>org.restlet.jee</groupId>
-      <artifactId>org.restlet</artifactId>
+      <artifactId>org.restlet.ext.xstream</artifactId>
       <version>2.1.2</version>
     </dependency>
+    
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.5</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.restlet.jse</groupId>
+        <artifactId>org.restlet</artifactId>
+        <version>${restlet-version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.restlet.jse</groupId>
+        <artifactId>org.restlet.ext.jackson</artifactId>
+        <version>${restlet-version}</version>
+    </dependency>
+
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
@@ -31,47 +69,13 @@ This is designed to be used in single BigBlueButton deploys.
       <artifactId>commons-codec</artifactId>
       <version>1.4</version>
     </dependency>
-    <dependency>
-      <groupId>org.restlet.jee</groupId>
-      <artifactId>org.restlet.ext.servlet</artifactId>
-      <version>2.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.restlet.jee</groupId>
-      <artifactId>org.restlet.ext.spring</artifactId>
-      <version>2.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.ebaysf.web</groupId>
-      <artifactId>cors-filter</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.restlet.jee</groupId>
-      <artifactId>org.restlet.ext.json</artifactId>
-      <version>2.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.restlet.jee</groupId>
-      <artifactId>org.restlet.ext.xml</artifactId>
-      <version>2.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.restlet.jee</groupId>
-      <artifactId>org.restlet.ext.xstream</artifactId>
-      <version>2.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
-      <scope>provided</scope>
-    </dependency>
+<!--
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlets</artifactId>
       <version>9.0.4.v20130625</version>
     </dependency>
+-->
     <dependency>
       <groupId>dnsjava</groupId>
       <artifactId>dnsjava</artifactId>
@@ -101,6 +105,17 @@ This is designed to be used in single BigBlueButton deploys.
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
           <webXml>src\main\webapp\WEB-INF\web.xml</webXml>
+          <webResources>
+	        <resource>
+	            <directory>src/main/resources</directory>
+	            <targetPath>WEB-INF/resources/</targetPath>
+	            <includes>
+	                <include>log4j.properties</include>
+	                <include>logging.properties</include>
+	                <include>applicationContext.xml</include>
+	            </includes>
+	        </resource>
+	    </webResources>
         </configuration>
       </plugin>
 	<plugin>
