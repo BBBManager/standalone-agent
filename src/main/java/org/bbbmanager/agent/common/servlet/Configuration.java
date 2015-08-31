@@ -33,9 +33,9 @@ public class Configuration extends HttpServlet {
 			configFilePath = System.getenv("BBBMANAGER_CONF");
 		}
 		if(configFilePath == null) {
-			String errorMessage = "Environment variable not set: BBBMANAGER_CONF (you can use java -Dbbbmanager.configfile also)";
-			log.error(errorMessage);
-			throw new ServletException(errorMessage);
+			configFilePath = "/opt/bbbmanager/conf/bbbmanager.properties";
+			String errorMessage = "Not possible to read config location from env var BBBMANAGER_CONF and no config file parsed to JVM (with -Dbbbmanager.configfile), using default location: " + configFilePath;
+			log.info(errorMessage);
 		}
 		File configFile = new File(configFilePath);
 		FileInputStream configFileIS;
