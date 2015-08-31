@@ -61,7 +61,11 @@ public class StandaloneAgentServlet extends HttpServlet {
 				bbbPropertiesFileStream.close();
 				
 				String securitySalt = bbbConf.getProperty("securitySalt");
-				String serverURL = bbbConf.getProperty("bigbluebutton.web.serverURL");
+				//String serverURL = bbbConf.getProperty("bigbluebutton.web.serverURL");
+				
+				//TDJ: serverURL in the standalone agent is always localhost
+				String serverURL = "http://localhost:8080";
+						
 				String serverUUID = UUID.randomUUID().toString();
 				String defaultClientUrl = bbbConf.getProperty("defaultClientUrl");
 				String serverIP = getServerIp();
