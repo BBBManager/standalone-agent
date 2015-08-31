@@ -36,27 +36,27 @@ public class JoinResource extends SecuredResource {
 	public Object joinMeeting() {
 		if(checkKey()) {
 			Form params = getRequest().getResourceRef().getQueryAsForm();
-			String meetingID = (String) params.getValues("meetingId");
-			String meetingName = (String) params.getValues("meetingName");
-			String logoutUrl = (String) params.getValues("logoutUrl");
-			Integer maxParticipants = Integer.parseInt(params.getValues("maxParticipants"));
-			Boolean record = ((String)params.getValues("record")).trim().equals("true") || ((String)params.getValues("record")).trim().equals("1");
-			Integer durationMinutes = Integer.parseInt(params.getValues("durationMinutes"));
-			String userFullName = (String) params.getValues("userFullName");
-			String userId = (String) params.getValues("userId");
-			String userRoleInMeeting = (String) params.getValues("userRoleInMeeting");
-			String welcomeMessage = (String) params.getValues("welcomeMessage");
-			String callbackURL = (String) params.getValues("callbackURL");
-			String userIpAddress = (String) params.getValues("userIpAddress");
 			
-			String strMeetingLockOnStart = (String) params.getValues("meetingLockOnStart");
-			if(strMeetingLockOnStart == null) strMeetingLockOnStart = "0";
+			//Meting info
+			String meetingName = (String) params.getValues("meetingName");
+			String meetingID = (String) params.getValues("meetingId");
+			String welcomeMessage = (String) params.getValues("welcomeMessage");
+			Integer maxParticipants = Integer.parseInt(params.getValues("maxParticipants"));
+			String logoutUrl = (String) params.getValues("logoutUrl");
+			Boolean record = ((String)params.getValues("record")).trim().equals("true") || ((String)params.getValues("record")).trim().equals("1");
+			Boolean encrypt = ((String)params.getValues("encrypt")).trim().equals("true") || ((String)params.getValues("encrypt")).trim().equals("1");
+			
+			Integer durationMinutes = Integer.parseInt(params.getValues("durationMinutes"));
+			String callbackURL = (String) params.getValues("callbackURL");
 			
 			String strMeetingMuteOnStart = (String) params.getValues("meetingMuteOnStart");
 			if(strMeetingMuteOnStart == null) strMeetingMuteOnStart = "0";
 			
-			String strLockAllowModeratorLocking = (String) params.getValues("lockAllowModeratorLocking");
-			if(strLockAllowModeratorLocking == null) strLockAllowModeratorLocking = "0";
+			String strLockLockOnJoin = (String) params.getValues("lockLockOnJoin");
+			if(strLockLockOnJoin == null) strLockLockOnJoin = "0";
+			
+			String strLockLockLayoutForLockedUsers = (String) params.getValues("lockLockLayoutForLockedUsers");
+			if(strLockLockLayoutForLockedUsers == null) strLockLockLayoutForLockedUsers = "0";
 			
 			String strLockDisableMicForLockedUsers = (String) params.getValues("lockDisableMicForLockedUsers");
 			if(strLockDisableMicForLockedUsers == null) strLockDisableMicForLockedUsers = "0";
@@ -70,13 +70,20 @@ public class JoinResource extends SecuredResource {
 			String strLockDisablePrivateChatForLockedUsers = (String) params.getValues("lockDisablePrivateChatForLockedUsers");
 			if(strLockDisablePrivateChatForLockedUsers == null) strLockDisablePrivateChatForLockedUsers = "0";
 			
-			Boolean meetingLockOnStart = strMeetingLockOnStart.equals("1");
 			Boolean meetingMuteOnStart = strMeetingMuteOnStart.equals("1");
-			Boolean lockAllowModeratorLocking = strLockAllowModeratorLocking.equals("1");
+			Boolean lockLockOnJoin = strLockLockOnJoin.equals("1");
+			Boolean lockLockLayoutForLockedUsers = strLockLockLayoutForLockedUsers.equals("1");
 			Boolean lockDisableMicForLockedUsers = strLockDisableMicForLockedUsers.equals("1");
 			Boolean lockDisableCamForLockedUsers = strLockDisableCamForLockedUsers.equals("1");
 			Boolean lockDisablePublicChatForLockedUsers = strLockDisablePublicChatForLockedUsers.equals("1");
 			Boolean lockDisablePrivateChatForLockedUsers = strLockDisablePrivateChatForLockedUsers.equals("1");
+			
+			
+			//User Info
+			String userFullName = (String) params.getValues("userFullName");
+			String userId = (String) params.getValues("userId");
+			String userRoleInMeeting = (String) params.getValues("userRoleInMeeting");
+			String userIpAddress = (String) params.getValues("userIpAddress");
 			
 			User.getUserIPS().put(userId, userIpAddress);
 			
@@ -109,9 +116,11 @@ public class JoinResource extends SecuredResource {
 						}
 						
 						try {
-							Meeting newMeeting = new Meeting(meetingName, meetingID, welcomeMessage, maxParticipants, logoutUrl, record, durationMinutes, callbackURL,
-									meetingLockOnStart, meetingMuteOnStart, lockAllowModeratorLocking, lockDisableMicForLockedUsers, 
-									lockDisableCamForLockedUsers, lockDisablePublicChatForLockedUsers, lockDisablePrivateChatForLockedUsers);
+							Meeting newMeeting = new Meeting(meetingName, meetingID, welcomeMessage, maxParticipants, logoutUrl, record, encrypt, 
+									durationMinutes, callbackURL, meetingMuteOnStart, lockLockOnJoin, lockLockLayoutForLockedUsers, 
+									lockDisableMicForLockedUsers, lockDisableCamForLockedUsers, lockDisablePublicChatForLockedUsers, 
+									lockDisablePrivateChatForLockedUsers);
+							
 							BigBlueButtonAPI.createMeeting(nextServer, newMeeting, newMeeting.getMetadata());
 						} catch (Exception e){
 							log.trace("Error: " + e.getMessage(), e);

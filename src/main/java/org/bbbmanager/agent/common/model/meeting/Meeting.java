@@ -47,9 +47,21 @@ public class Meeting implements Serializable {
 	@XStreamAsAttribute
 	private Boolean record;
 	@XStreamAsAttribute
+	private Boolean encrypt;
+	@XStreamAsAttribute
 	private String logoutURL;
 	@XStreamAsAttribute
 	private String callbackURL;
+	
+	//Lock Settings
+	private Boolean meetingMuteOnStart;
+	private Boolean lockLockOnJoin;
+	private Boolean lockLockLayoutForLockedUsers;
+	private Boolean lockDisableMicForLockedUsers; 
+	private Boolean lockDisableCamForLockedUsers;
+	private Boolean lockDisablePublicChatForLockedUsers;
+	private Boolean lockDisablePrivateChatForLockedUsers;
+	
 	
 	//Information polled from server (getMeetingInfo)
 	private Boolean recording;
@@ -70,49 +82,47 @@ public class Meeting implements Serializable {
 	//This value is updated every time a meeting is saw in a server
 	private Long lastTimeSeenOnServer = 0L;
 	
-	private Boolean meetingLockOnStart;
-	private Boolean meetingMuteOnStart;
-	private Boolean lockAllowModeratorLocking;
-	private Boolean lockDisableMicForLockedUsers; 
-	private Boolean lockDisableCamForLockedUsers;
-	private Boolean lockDisablePublicChatForLockedUsers;
-	private Boolean lockDisablePrivateChatForLockedUsers;
-	
 	//Users in meeting (updated from polling method and from join api)
 	@XStreamOmitField
 	private Integer userCount = 0;
 	
-	private void construct(String name, String id, String welcomeMessage, Integer maxParticipants, String logoutURL, Boolean record, Integer durationMinutes, String callbackURL,
-			Boolean meetingLockOnStart, Boolean meetingMuteOnStart, Boolean lockAllowModeratorLocking, Boolean lockDisableMicForLockedUsers, 
-			Boolean lockDisableCamForLockedUsers, Boolean lockDisablePublicChatForLockedUsers, Boolean lockDisablePrivateChatForLockedUsers) {
+	private void construct(String name, String id, String welcomeMessage, Integer maxParticipants, String logoutURL, Boolean record, Boolean encrypt, 
+			Integer durationMinutes, String callbackURL, Boolean meetingMuteOnStart, Boolean lockLockOnJoin, Boolean lockLockLayoutForLockedUsers,
+			Boolean lockDisableMicForLockedUsers, Boolean lockDisableCamForLockedUsers, Boolean lockDisablePublicChatForLockedUsers, 
+			Boolean lockDisablePrivateChatForLockedUsers) {
 		setName(name);
 		setId(id);
 		setWelcomeMessage(welcomeMessage);
 		setMaxParticipants(maxParticipants);
 		setLogoutURL(logoutURL);
 		setRecord(record);
+		setEncrypt(encrypt);
 		setDurationMinutes(durationMinutes);
 		setCallbackURL(callbackURL);
 		
-		setMeetingLockOnStart(meetingLockOnStart);
 		setMeetingMuteOnStart(meetingMuteOnStart);
-		setLockAllowModeratorLocking(lockAllowModeratorLocking);
-		setLockDisableCamForLockedUsers(lockDisableCamForLockedUsers);
+		setLockLockOnJoin(lockLockOnJoin);
+		setLockLockLayoutForLockedUsers(lockLockLayoutForLockedUsers);
+		
 		setLockDisableMicForLockedUsers(lockDisableMicForLockedUsers);
-		setLockDisablePrivateChatForLockedUsers(lockDisablePrivateChatForLockedUsers);
+		setLockDisableCamForLockedUsers(lockDisableCamForLockedUsers);
 		setLockDisablePublicChatForLockedUsers(lockDisablePublicChatForLockedUsers);
+		setLockDisablePrivateChatForLockedUsers(lockDisablePrivateChatForLockedUsers);
 		
 		users = new ArrayList<User>();
 	}
 
 	
-	public Meeting(String name, String id, String welcomeMessage, Integer maxParticipants, String logoutURL, Boolean record, Integer durationMinutes, String callbackURL, Boolean meetingLockOnStart, Boolean meetingMuteOnStart, Boolean lockAllowModeratorLocking, Boolean lockDisableMicForLockedUsers, 
-			Boolean lockDisableCamForLockedUsers, Boolean lockDisablePublicChatForLockedUsers, Boolean lockDisablePrivateChatForLockedUsers) {
-		construct(name, id, welcomeMessage, maxParticipants, logoutURL, record, durationMinutes, callbackURL, 
-				meetingLockOnStart, meetingMuteOnStart, lockAllowModeratorLocking, lockDisableMicForLockedUsers, 
-				lockDisableCamForLockedUsers, lockDisablePublicChatForLockedUsers, lockDisablePrivateChatForLockedUsers);
+	public Meeting(String name, String id, String welcomeMessage, Integer maxParticipants, String logoutURL, Boolean record, Boolean encrypt, 
+			Integer durationMinutes, String callbackURL, Boolean meetingMuteOnStart, Boolean lockLockOnJoin, Boolean lockLockLayoutForLockedUsers,
+			Boolean lockDisableMicForLockedUsers, Boolean lockDisableCamForLockedUsers, Boolean lockDisablePublicChatForLockedUsers, 
+			Boolean lockDisablePrivateChatForLockedUsers) {
+		construct(name, id, welcomeMessage, maxParticipants, logoutURL, record, encrypt, 
+				durationMinutes, callbackURL, meetingMuteOnStart, lockLockOnJoin, lockLockLayoutForLockedUsers,
+				lockDisableMicForLockedUsers, lockDisableCamForLockedUsers, lockDisablePublicChatForLockedUsers, 
+				lockDisablePrivateChatForLockedUsers);
 	}
-	
+		
 	public Meeting(String meetingID, String metadata) throws ParserConfigurationException, SAXException, IOException, ParseException {
 		
 		metadata = metadata.replace("&lt;", "<");
@@ -132,20 +142,23 @@ public class Meeting implements Serializable {
 		Integer _maxParticipants = Integer.parseInt(doc.getElementsByTagName("maxParticipants").item(0).getTextContent().trim());
 		Integer _durationMinutes = Integer.parseInt(doc.getElementsByTagName("durationMinutes").item(0).getTextContent().trim());
 		Boolean _record = doc.getElementsByTagName("record").item(0).getTextContent().trim().equals("true");
+		Boolean _encrypt = doc.getElementsByTagName("encrypt").item(0).getTextContent().trim().equals("true");
 		String _logoutURL = doc.getElementsByTagName("logoutURL").item(0).getTextContent().trim();
 		String _callbackURL = doc.getElementsByTagName("callbackURL").item(0).getTextContent().trim();
+		Boolean _meetingMuteOnStart = doc.getElementsByTagName("meetingMuteOnStart").item(0).getTextContent().trim().equals("true");
 		
-		Boolean meetingLockOnStart = doc.getElementsByTagName("meetingLockOnStart").item(0).getTextContent().trim().equals("true");
-		Boolean meetingMuteOnStart = doc.getElementsByTagName("meetingMuteOnStart").item(0).getTextContent().trim().equals("true");
-		Boolean lockAllowModeratorLocking = doc.getElementsByTagName("lockAllowModeratorLocking").item(0).getTextContent().trim().equals("true");
-		Boolean lockDisableMicForLockedUsers = doc.getElementsByTagName("lockDisableMicForLockedUsers").item(0).getTextContent().trim().equals("true");
-		Boolean lockDisableCamForLockedUsers = doc.getElementsByTagName("lockDisableCamForLockedUsers").item(0).getTextContent().trim().equals("true");
-		Boolean lockDisablePublicChatForLockedUsers = doc.getElementsByTagName("lockDisablePublicChatForLockedUsers").item(0).getTextContent().trim().equals("true");
-		Boolean lockDisablePrivateChatForLockedUsers = doc.getElementsByTagName("lockDisablePrivateChatForLockedUsers").item(0).getTextContent().trim().equals("true");
+		Boolean _lockLockOnJoin = doc.getElementsByTagName("lockLockOnJoin").item(0).getTextContent().trim().equals("true");
+		Boolean _lockLockLayoutForLockedUsers = doc.getElementsByTagName("lockLockLayoutForLockedUsers").item(0).getTextContent().trim().equals("true");
 		
-		construct(_meetingName, _meetingID, _welcomeMessage, _maxParticipants, _logoutURL, _record, _durationMinutes, _callbackURL,
-				meetingLockOnStart, meetingMuteOnStart, lockAllowModeratorLocking, lockDisableMicForLockedUsers, 
-				lockDisableCamForLockedUsers, lockDisablePublicChatForLockedUsers, lockDisablePrivateChatForLockedUsers);
+		
+		Boolean _lockDisableMicForLockedUsers = doc.getElementsByTagName("lockDisableMicForLockedUsers").item(0).getTextContent().trim().equals("true");
+		Boolean _lockDisableCamForLockedUsers = doc.getElementsByTagName("lockDisableCamForLockedUsers").item(0).getTextContent().trim().equals("true");
+		Boolean _lockDisablePublicChatForLockedUsers = doc.getElementsByTagName("lockDisablePublicChatForLockedUsers").item(0).getTextContent().trim().equals("true");
+		Boolean _lockDisablePrivateChatForLockedUsers = doc.getElementsByTagName("lockDisablePrivateChatForLockedUsers").item(0).getTextContent().trim().equals("true");
+		
+		construct(_meetingName, _meetingID, _welcomeMessage, _maxParticipants, _logoutURL, _record, _encrypt, _durationMinutes, _callbackURL,
+				_meetingMuteOnStart, _lockLockOnJoin , _lockLockLayoutForLockedUsers, _lockDisableMicForLockedUsers, 
+				_lockDisableCamForLockedUsers, _lockDisablePublicChatForLockedUsers, _lockDisablePrivateChatForLockedUsers);
 	}
 	
 	/**
@@ -288,23 +301,24 @@ public class Meeting implements Serializable {
 	public String getMetadata() {
 		//If metadata is null, it was just created
 		if(metadata == null){
-			metadata = "<bbb-lb-meeting>" +
+			metadata = "<bbbmanager-meeting>" +
 					"\t<meetingID>" + getId() + "</meetingID>" +
 					"\t<meetingName>" + getName() + "</meetingName>" +
 					"\t<welcomeMessage>" + getWelcomeMessage() + "</welcomeMessage>" +
 					"\t<maxParticipants>" + getMaxParticipants() + "</maxParticipants>" +
 					"\t<durationMinutes>" + getDurationMinutes() + "</durationMinutes>" +
 					"\t<record>" + getRecord() + "</record>" +
+					"\t<encrypt>" + getEncrypt() + "</encrypt>" +
 					"\t<logoutURL>" + getLogoutURL() + "</logoutURL>" +
 					"\t<callbackURL>" + getCallbackURL() + "</callbackURL>" +
-					"\t<meetingLockOnStart>" + getMeetingLockOnStart() + "</meetingLockOnStart>" +
 					"\t<meetingMuteOnStart>" + getMeetingMuteOnStart() + "</meetingMuteOnStart>" +
-					"\t<lockAllowModeratorLocking>" + getLockAllowModeratorLocking() + "</lockAllowModeratorLocking>" +
+					"\t<lockLockOnJoin>" + getLockLockOnJoin() + "</lockLockOnJoin>" +
+					"\t<lockLockLayoutForLockedUsers>" + getLockLockLayoutForLockedUsers() + "</lockLockLayoutForLockedUsers>" +
 					"\t<lockDisableMicForLockedUsers>" + getLockDisableMicForLockedUsers() + "</lockDisableMicForLockedUsers>" +
 					"\t<lockDisableCamForLockedUsers>" + getLockDisableCamForLockedUsers() + "</lockDisableCamForLockedUsers>" +
 					"\t<lockDisablePublicChatForLockedUsers>" + getLockDisablePublicChatForLockedUsers() + "</lockDisablePublicChatForLockedUsers>" +
 					"\t<lockDisablePrivateChatForLockedUsers>" + getLockDisablePrivateChatForLockedUsers() + "</lockDisablePrivateChatForLockedUsers>" +
-					"</bbb-lb-meeting>";
+					"</bbbmanager-meeting>";
 		}
 		return metadata;
 	}
@@ -359,17 +373,6 @@ public class Meeting implements Serializable {
 		this.callbackURL = callbackURL;
 	}
 
-
-	public Boolean getMeetingLockOnStart() {
-		return meetingLockOnStart;
-	}
-
-
-	public void setMeetingLockOnStart(Boolean meetingLockOnStart) {
-		this.meetingLockOnStart = meetingLockOnStart;
-	}
-
-
 	public Boolean getMeetingMuteOnStart() {
 		return meetingMuteOnStart;
 	}
@@ -377,16 +380,6 @@ public class Meeting implements Serializable {
 
 	public void setMeetingMuteOnStart(Boolean meetingMuteOnStart) {
 		this.meetingMuteOnStart = meetingMuteOnStart;
-	}
-
-
-	public Boolean getLockAllowModeratorLocking() {
-		return lockAllowModeratorLocking;
-	}
-
-
-	public void setLockAllowModeratorLocking(Boolean lockAllowModeratorLocking) {
-		this.lockAllowModeratorLocking = lockAllowModeratorLocking;
 	}
 
 
@@ -431,5 +424,36 @@ public class Meeting implements Serializable {
 	public void setLockDisablePrivateChatForLockedUsers(
 			Boolean lockDisablePrivateChatForLockedUsers) {
 		this.lockDisablePrivateChatForLockedUsers = lockDisablePrivateChatForLockedUsers;
+	}
+
+
+	public Boolean getEncrypt() {
+		return encrypt;
+	}
+
+
+	public void setEncrypt(Boolean encrypt) {
+		this.encrypt = encrypt;
+	}
+
+
+	public Boolean getLockLockOnJoin() {
+		return lockLockOnJoin;
+	}
+
+
+	public void setLockLockOnJoin(Boolean lockLockOnJoin) {
+		this.lockLockOnJoin = lockLockOnJoin;
+	}
+
+
+	public Boolean getLockLockLayoutForLockedUsers() {
+		return lockLockLayoutForLockedUsers;
+	}
+
+
+	public void setLockLockLayoutForLockedUsers(
+			Boolean lockLockLayoutForLockedUsers) {
+		this.lockLockLayoutForLockedUsers = lockLockLayoutForLockedUsers;
 	}
 }

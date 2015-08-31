@@ -144,7 +144,7 @@ public abstract class BigBlueButtonAPI {
 							
 							String metadata = (String) meetingDetails.get("metadata");
 							
-							if(metadata.contains("<bbb-lb-meeting>")){
+							if(metadata.contains("<bbbmanager-meeting>")){
 								try {
 									meeting = new Meeting(meetingID, metadata);
 								} catch (ParseException e) {
@@ -614,12 +614,10 @@ public abstract class BigBlueButtonAPI {
 			Node oldLockNode= null, oldMeetingNode = null;
 			if(doc.getElementsByTagName("lock").getLength() > 0) {
 				oldLockNode = doc.getElementsByTagName("lock").item(0);
-				//node.getParentNode().removeChild(node);
 			}
 			
 			if(doc.getElementsByTagName("meeting").getLength() > 0) {
 				oldMeetingNode = doc.getElementsByTagName("meeting").item(0);
-				//node.getParentNode().removeChild(node);
 			}
 			
 			Element lockNode = doc.createElement("lock");
@@ -627,10 +625,10 @@ public abstract class BigBlueButtonAPI {
 			lockNode.setAttribute("disableCamForLockedUsers", meeting.getLockDisableCamForLockedUsers()?"true":"false");
 			lockNode.setAttribute("disablePublicChatForLockedUsers", meeting.getLockDisablePublicChatForLockedUsers()?"true":"false");
 			lockNode.setAttribute("disablePrivateChatForLockedUsers", meeting.getLockDisablePrivateChatForLockedUsers()?"true":"false");
-			lockNode.setAttribute("allowModeratorLocking", meeting.getLockAllowModeratorLocking()?"true":"false");
+			lockNode.setAttribute("lockOnJoin", meeting.getLockLockOnJoin()?"true":"false");
+			lockNode.setAttribute("lockLayoutForLockedUsers", meeting.getLockLockLayoutForLockedUsers()?"true":"false");
 			
 			Element meetingNode = doc.createElement("meeting");
-			meetingNode.setAttribute("lockOnStart", meeting.getMeetingLockOnStart()?"true":"false");
 			meetingNode.setAttribute("muteOnStart", meeting.getMeetingMuteOnStart()?"true":"false");
 			
 			if(oldLockNode != null)

@@ -12,7 +12,7 @@ This is designed to be used in single BigBlueButton deploys.
    <repositories>
     <repository>
       <id>restlet</id>
-      <url>http://maven.restlet.org/</url>
+      <url>http://maven.restlet.com/</url>
     </repository>
   </repositories>
   <dependencies>

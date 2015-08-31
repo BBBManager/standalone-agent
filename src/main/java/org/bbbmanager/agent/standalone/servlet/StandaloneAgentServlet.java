@@ -6,8 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.UUID;
@@ -19,7 +17,6 @@ import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
 import org.bbbmanager.agent.common.model.server.BBBServer;
-import org.bbbmanager.agent.common.repository.MeetingRepository;
 import org.bbbmanager.agent.common.servlet.Configuration;
 import org.bbbmanager.agent.standalone.repository.ServerRepository;
 import org.bbbmanager.bigbluebutton.api.BigBlueButtonAPI;
@@ -71,7 +68,6 @@ public class StandaloneAgentServlet extends HttpServlet {
 				
 				defaultClientUrl = defaultClientUrl.replaceAll(Pattern.quote("/client/BigBlueButton.html"), "/bbbmanager-standalone-agent/index.jsp");
 				defaultClientUrl = defaultClientUrl.replaceAll(Pattern.quote("${bigbluebutton.web.serverURL}"), serverURL);
-				
 				
 				ServerRepository.getInstance().setServer(new BBBServer(serverUUID, serverURL, securitySalt, defaultClientUrl, serverIP));
 			} catch (IOException e) {
