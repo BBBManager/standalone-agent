@@ -64,11 +64,11 @@ public class StandaloneAgentServlet extends HttpServlet {
 				//String serverURL = bbbConf.getProperty("bigbluebutton.web.serverURL");
 				
 				//TDJ: serverURL in the standalone agent is always localhost
-				String serverURL = "http://localhost:8080";
+				String serverURL = "http://127.0.0.1:8080";
 						
 				String serverUUID = UUID.randomUUID().toString();
 				String defaultClientUrl = bbbConf.getProperty("defaultClientUrl");
-				String serverIP = getServerIp();
+				String serverIP = "127.0.0.1"; //getServerIp();
 				
 				defaultClientUrl = defaultClientUrl.replaceAll(Pattern.quote("/client/BigBlueButton.html"), "/bbbmanager-standalone-agent/index.jsp");
 				defaultClientUrl = defaultClientUrl.replaceAll(Pattern.quote("${bigbluebutton.web.serverURL}"), serverURL);
@@ -120,44 +120,44 @@ public class StandaloneAgentServlet extends HttpServlet {
 		thPollBBBServers.start();
 	}
 	
-	private String getServerIp() throws ServletException {
-		String ipCommand = Configuration.getConfig("common.detect-ip-command");
-		String ipAddress = null;
-		
-		try {
-			ProcessBuilder pb = new ProcessBuilder(ipCommand);
-			Process p = pb.start();
-			
-			InputStream procInput = p.getInputStream();
-			InputStreamReader ir = new InputStreamReader(procInput);
-			BufferedReader br = new BufferedReader(ir);
-			
-			
-			
-			String line = null;
-			
-			while((line = br.readLine()) != null){
-				line = line.trim();
-				
-				if(line.matches("[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+")) {
-					ipAddress = line;
-				}
-			}
-			
-			if(ipAddress == null){
-				log.error("init: Unable to detect ip address");
-				throw new ServletException("init: Unable to detect ip address.");
-			} else {
-				log.info("init: Server IP address: " + ipAddress);
-			}
-			
-		} catch (IOException e1) {
-			log.error("Error executing IP detection command: " + e1.getMessage(), e1);
-			throw new ServletException("Error executing IP detection command: " + e1.getMessage());
-		}
-		
-		return ipAddress;
-	}
+//	private String getServerIp() throws ServletException {
+//		String ipCommand = Configuration.getConfig("common.detect-ip-command");
+//		String ipAddress = null;
+//		
+//		try {
+//			ProcessBuilder pb = new ProcessBuilder(ipCommand);
+//			Process p = pb.start();
+//			
+//			InputStream procInput = p.getInputStream();
+//			InputStreamReader ir = new InputStreamReader(procInput);
+//			BufferedReader br = new BufferedReader(ir);
+//			
+//			
+//			
+//			String line = null;
+//			
+//			while((line = br.readLine()) != null){
+//				line = line.trim();
+//				
+//				if(line.matches("[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+")) {
+//					ipAddress = line;
+//				}
+//			}
+//			
+//			if(ipAddress == null){
+//				log.error("init: Unable to detect ip address");
+//				throw new ServletException("init: Unable to detect ip address.");
+//			} else {
+//				log.info("init: Server IP address: " + ipAddress);
+//			}
+//			
+//		} catch (IOException e1) {
+//			log.error("Error executing IP detection command: " + e1.getMessage(), e1);
+//			throw new ServletException("Error executing IP detection command: " + e1.getMessage());
+//		}
+//		
+//		return ipAddress;
+//	}
 	
 	public static StandaloneAgentServlet getInstance() {
 		if(_instance == null) {

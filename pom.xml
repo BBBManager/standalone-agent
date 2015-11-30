@@ -104,7 +104,7 @@ This is designed to be used in single BigBlueButton deploys.
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
-          <webXml>src\main\webapp\WEB-INF\web.xml</webXml>
+          <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
           <webResources>
 	        <resource>
 	            <directory>src/main/resources</directory>
