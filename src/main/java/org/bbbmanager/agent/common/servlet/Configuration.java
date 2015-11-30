@@ -1,11 +1,13 @@
 package org.bbbmanager.agent.common.servlet;
 
+import java.io.File;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
+import org.bbbmanager.common.util.FileUtils;
 
 /**
  * --
@@ -26,12 +28,14 @@ public class Configuration extends HttpServlet {
         log.info("Starting servlet: Configuration");
         config = new HashMap<>();
 
-        config.put("bbbmanager.adminKeyFile", "/var/bbbmanager/parameters/agent_key");
-        config.put("common.http.timeout.read", "3000");
-        config.put("common.http.timeout.connect", "3000");
-        config.put("bbb.properties", "/var/lib/tomcat7/webapps/bigbluebutton/WEB-INF/classes/bigbluebutton.properties");
-        config.put("bbb.poll.interval", "3000");
-        config.put("events.publish.interval", "5000");
+        config.put("bbbmanager.adminKey".toLowerCase(), FileUtils.getFileContents(new File("/var/bbbmanager/parameters/agent_key")));
+        config.put("common.http.timeout.read".toLowerCase(), "3000");
+        config.put("common.http.timeout.connect".toLowerCase(), "3000");
+        config.put("bbb.properties".toLowerCase(), "/var/lib/tomcat7/webapps/bigbluebutton/WEB-INF/classes/bigbluebutton.properties");
+        config.put("bbb.poll.interval".toLowerCase(), "3000");
+        config.put("events.publish.interval".toLowerCase(), "5000");
+        
+        _instance = this;
 
         //TODO make the configuration read from an optional file, that if does not exist, don't break
 //		String configFilePath = System.getProperty("bbbmanager.configfile");
@@ -75,8 +79,11 @@ public class Configuration extends HttpServlet {
     }
 
     public static Configuration getInstance() {
-        if (_instance == null) {
-            log.error("getInstance - Servlet was not initialized yet.");
+        while (_instance == null) {
+            log.error("getInstance - Servlet was not initialized yet, waiting 1 sec");
+            try {
+                Thread.sleep ( 1000 );
+            } catch (InterruptedException ex) {}
         }
         return _instance;
     }

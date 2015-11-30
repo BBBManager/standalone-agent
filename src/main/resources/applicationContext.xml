@@ -19,6 +19,8 @@
 	<bean name="/meetings/{meetingID}/end" class="org.bbbmanager.agent.standalone.resource.EndMeetingResource" scope="prototype" autowire="byName" />
 	<bean name="/meetings/{meetingID}/end/" class="org.bbbmanager.agent.standalone.resource.EndMeetingResource" scope="prototype" autowire="byName" />
 	
+        <bean name="/ping" class="org.bbbmanager.agent.standalone.resource.PingResource" scope="prototype" autowire="byName" />
+        
 	<bean name="/join" class="org.bbbmanager.agent.standalone.resource.JoinResource" scope="prototype" autowire="byName" />
 	<bean name="/join/" class="org.bbbmanager.agent.standalone.resource.JoinResource" scope="prototype" autowire="byName" />
 	

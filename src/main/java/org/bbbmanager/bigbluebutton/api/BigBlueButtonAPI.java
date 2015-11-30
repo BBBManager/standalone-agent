@@ -431,7 +431,7 @@ public abstract class BigBlueButtonAPI {
 			    }
 			    
 			    //String location = connection.getHeaderField("Location");
-			    String location = server.getDefaultClientUrl();
+			    String location = "/index-join.php";
 			    
 			    if(location.contains("?")){
 			    	location += "&";
