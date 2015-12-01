@@ -34,43 +34,10 @@ public class Configuration extends HttpServlet {
         config.put("bbb.properties".toLowerCase(), "/var/lib/tomcat7/webapps/bigbluebutton/WEB-INF/classes/bigbluebutton.properties");
         config.put("bbb.poll.interval".toLowerCase(), "3000");
         config.put("events.publish.interval".toLowerCase(), "5000");
-        
+
         _instance = this;
 
-        //TODO make the configuration read from an optional file, that if does not exist, don't break
-//		String configFilePath = System.getProperty("bbbmanager.configfile");
-//		if(configFilePath == null) {
-//			configFilePath = System.getenv("BBBMANAGER_CONF");
-//		}
-//		if(configFilePath == null) {
-//			configFilePath = "/var/bbbmanager/agent/conf/bbbmanager.properties";
-//			String errorMessage = "Not possible to read config location from env var BBBMANAGER_CONF and no config file parsed to JVM (with -Dbbbmanager.configfile), using default location: " + configFilePath;
-//			log.info(errorMessage);
-//		}
-//		File configFile = new File(configFilePath);
-//		FileInputStream configFileIS;
-//		
-//		log.debug("Starting servlet: Configuration - Reading config from file: " + configFile);
-//		
-//		try {
-//			configFileIS = new FileInputStream(configFile);
-//			Properties props = new Properties() ;
-//			try {
-//				props.load(configFileIS);
-//				configFileIS.close();
-//				
-//				for(Object propName : props.keySet()) {
-//					String propNameString = (String) propName;
-//					config.put(propNameString.toLowerCase(), (String) props.get(propName));
-//				}
-//				
-//				_instance = this;
-//			} catch (IOException e) {
-//				log.error("Starting servlet: Configuration - Error reading config file:  " + e.getMessage(), e);
-//			}
-//		} catch (FileNotFoundException e) {
-//			log.error("Starting servlet: Configuration - Error reading config file:  " + e.getMessage(), e);
-//		}
+        //TODO read from a file
     }
 
     @Override
@@ -80,10 +47,11 @@ public class Configuration extends HttpServlet {
 
     public static Configuration getInstance() {
         while (_instance == null) {
-            log.error("getInstance - Servlet was not initialized yet, waiting 1 sec");
+            log.info("getInstance - Servlet was not initialized yet, waiting 1 sec");
             try {
-                Thread.sleep ( 1000 );
-            } catch (InterruptedException ex) {}
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+            }
         }
         return _instance;
     }

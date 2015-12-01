@@ -16,8 +16,8 @@ public class SecuredResource extends ServerResource {
         try {
             String adminKeyReceived = (String) getRequest().getResourceRef().getQueryAsForm().getValues("adminKey");
             String adminKeyExpected = Configuration.getConfig("bbbmanager.adminKey");
-            
-            if(adminKeyExpected == null) {
+
+            if (adminKeyExpected == null) {
                 System.err.println("Expected key is null. Access denied.");
                 getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN);
                 return false;

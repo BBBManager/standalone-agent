@@ -14,31 +14,36 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public abstract class XMLUtils {
-	/**
-	 * Parse XML
-	 * @throws ParserConfigurationException 
-	 * @throws IOException 
-	 * @throws SAXException 
-	 * */
-	public static Document parseXMLFromInputStream (InputStream is) throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory
-				.newInstance();
-		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(new InputSource(new InputStreamReader(is)));
-		return doc;
-	}
-	
-	/**
-	 * Parse XML
-	 * @throws ParserConfigurationException 
-	 * @throws IOException 
-	 * @throws SAXException 
-	 * */
-	public static Document parseXMLFromString (String str) throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory
-				.newInstance();
-		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(new ByteArrayInputStream(str.getBytes()));
-		return doc;
-	}
+
+    /**
+     * Parse XML
+     *
+     * @throws ParserConfigurationException
+     * @throws IOException
+     * @throws SAXException 
+	 *
+     */
+    public static Document parseXMLFromInputStream(InputStream is) throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory
+                .newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document doc = docBuilder.parse(new InputSource(new InputStreamReader(is)));
+        return doc;
+    }
+
+    /**
+     * Parse XML
+     *
+     * @throws ParserConfigurationException
+     * @throws IOException
+     * @throws SAXException 
+	 *
+     */
+    public static Document parseXMLFromString(String str) throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory
+                .newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document doc = docBuilder.parse(new ByteArrayInputStream(str.getBytes()));
+        return doc;
+    }
 }

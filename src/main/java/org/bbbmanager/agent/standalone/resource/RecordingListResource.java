@@ -9,18 +9,20 @@ import org.restlet.resource.Get;
 
 /**
  * This resource provides a listing of recordings on server
- * 
- * */
+ *
+ *
+ */
 public class RecordingListResource extends SecuredResource {
-	private static final Logger log = Logger.getLogger(RecordingListResource.class);
-	
-	@Get
-	public List<Recording> getRecordings() {
-		if(checkKey()) {
-			return RecordingRepository.getInstance().getAll();
-		} else {
-			return null;
-		}
-	}
-	
+
+    private static final Logger log = Logger.getLogger(RecordingListResource.class);
+
+    @Get
+    public List<Recording> getRecordings() {
+        if (checkKey()) {
+            return RecordingRepository.getInstance().getAll();
+        } else {
+            return null;
+        }
+    }
+
 }

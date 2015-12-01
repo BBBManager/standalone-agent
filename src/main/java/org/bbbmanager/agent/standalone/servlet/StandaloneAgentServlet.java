@@ -19,104 +19,110 @@ import org.bbbmanager.agent.standalone.repository.ServerRepository;
 import org.bbbmanager.bigbluebutton.api.BigBlueButtonAPI;
 
 /**
- *  
- * 
+ *
+ *
  * @author BBBManager Team <team@bbbmanager.org>
- * */
+ *
+ */
 public class StandaloneAgentServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private static final Logger log = Logger.getLogger(StandaloneAgentServlet.class);
-	
-	private static StandaloneAgentServlet _instance;
-	private HashMap<String, String> config;
-	
-	/** Flag that's used to stop threads*/
-	private Boolean destroyed = false;
-	
-	@Override
-	public void destroy() {
-		super.destroy();
-		synchronized (destroyed) {
-			destroyed=true;
-		}
-		_instance = null;
-	}
-	
-	@Override
-	public void init() throws ServletException {
-		log.info("Starting servlet: " + this.getClass().getSimpleName());
-		File bbbPropertiesFile = new File(Configuration.getConfig("bbb.properties"));
-		if(!bbbPropertiesFile.exists()) {
-			log.error("Property bbb.properties is invalid, the file does not exists");
-			return;
-		} else {
-			FileInputStream bbbPropertiesFileStream;
-			try {
-				bbbPropertiesFileStream = new FileInputStream(bbbPropertiesFile);
-				Properties bbbConf = new Properties();
-				bbbConf.load(bbbPropertiesFileStream);
-				bbbPropertiesFileStream.close();
-				
-				String securitySalt = bbbConf.getProperty("securitySalt");
+
+    private static final long serialVersionUID = 1L;
+    private static final Logger log = Logger.getLogger(StandaloneAgentServlet.class);
+
+    private static StandaloneAgentServlet _instance;
+    private HashMap<String, String> config;
+
+    /**
+     * Flag that's used to stop threads
+     */
+    private Boolean destroyed = false;
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        synchronized (destroyed) {
+            destroyed = true;
+        }
+        _instance = null;
+    }
+
+    @Override
+    public void init() throws ServletException {
+        log.info("Starting servlet: " + this.getClass().getSimpleName());
+        File bbbPropertiesFile = new File(Configuration.getConfig("bbb.properties"));
+        if (!bbbPropertiesFile.exists()) {
+            log.error("Property bbb.properties is invalid, the file does not exists");
+            return;
+        } else {
+            FileInputStream bbbPropertiesFileStream;
+            try {
+                bbbPropertiesFileStream = new FileInputStream(bbbPropertiesFile);
+                Properties bbbConf = new Properties();
+                bbbConf.load(bbbPropertiesFileStream);
+                bbbPropertiesFileStream.close();
+
+                String securitySalt = bbbConf.getProperty("securitySalt");
 				//String serverURL = bbbConf.getProperty("bigbluebutton.web.serverURL");
-				
-				//TDJ: serverURL in the standalone agent is always localhost
-				String serverURL = "http://127.0.0.1:8080";
-						
-				String serverUUID = UUID.randomUUID().toString();
-				String defaultClientUrl = bbbConf.getProperty("defaultClientUrl");
-				String serverIP = "127.0.0.1"; //getServerIp();
-				
-				defaultClientUrl = defaultClientUrl.replaceAll(Pattern.quote("/client/BigBlueButton.html"), "/bbbmanager-standalone-agent/index.jsp");
-				defaultClientUrl = defaultClientUrl.replaceAll(Pattern.quote("${bigbluebutton.web.serverURL}"), serverURL);
-				
-				ServerRepository.getInstance().setServer(new BBBServer(serverUUID, serverURL, securitySalt, defaultClientUrl, serverIP));
-			} catch (IOException e) {
-				String errorMessage = "Error reading configurations from file " + bbbPropertiesFile.getName() + ", error was: " + e.getMessage();
-				log.error(errorMessage, e);
-				throw new ServletException(errorMessage);
-			}
-		}
-		
-		Thread thPollBBBServers = new Thread(
-				new Runnable() {
-					public void run() {
-						final AtomicReference<Boolean> forcePoll = new AtomicReference<Boolean>();
-						Long sleepTime = 100L;
-						Long sleepTotalTime = 0L;
-						
-						forcePoll.set(true);
-						
-						Long pollInterval;
-						
-						try{
-							pollInterval = Long.parseLong(Configuration.getConfig("bbb.poll.interval"));
-						} catch (Exception e) {
-							log.error("Error parsing configuration lb.poll.interval. Default will be used.");
-							pollInterval = 10000L;
-						}
-						while(true) {
-							try {
-								if(destroyed) return;
-								
-								if(forcePoll.getAndSet(false) || sleepTotalTime > pollInterval) {
-									sleepTotalTime = 0L;
-									BBBServer server = ServerRepository.getInstance().getServer();
-									BigBlueButtonAPI.pollMeetings(server);
-								}
-								
-								sleepTotalTime += sleepTime;
-								Thread.sleep(sleepTime);
-							} catch (InterruptedException e) {
-							}
-						}
-					}
-				}
-			);
-		thPollBBBServers.setName("PollBBBServers");
-		thPollBBBServers.start();
-	}
-	
+
+                //TDJ: serverURL in the standalone agent is always localhost
+                String serverURL = "http://127.0.0.1:8080";
+
+                String serverUUID = UUID.randomUUID().toString();
+                String defaultClientUrl = bbbConf.getProperty("defaultClientUrl");
+                String serverIP = "127.0.0.1"; //getServerIp();
+
+                defaultClientUrl = defaultClientUrl.replaceAll(Pattern.quote("/client/BigBlueButton.html"), "/bbbmanager-standalone-agent/index.jsp");
+                defaultClientUrl = defaultClientUrl.replaceAll(Pattern.quote("${bigbluebutton.web.serverURL}"), serverURL);
+
+                ServerRepository.getInstance().setServer(new BBBServer(serverUUID, serverURL, securitySalt, defaultClientUrl, serverIP));
+            } catch (IOException e) {
+                String errorMessage = "Error reading configurations from file " + bbbPropertiesFile.getName() + ", error was: " + e.getMessage();
+                log.error(errorMessage, e);
+                throw new ServletException(errorMessage);
+            }
+        }
+
+        Thread thPollBBBServers = new Thread(
+                new Runnable() {
+                    public void run() {
+                        final AtomicReference<Boolean> forcePoll = new AtomicReference<Boolean>();
+                        Long sleepTime = 100L;
+                        Long sleepTotalTime = 0L;
+
+                        forcePoll.set(true);
+
+                        Long pollInterval;
+
+                        try {
+                            pollInterval = Long.parseLong(Configuration.getConfig("bbb.poll.interval"));
+                        } catch (Exception e) {
+                            log.error("Error parsing configuration lb.poll.interval. Default will be used.");
+                            pollInterval = 10000L;
+                        }
+                        while (true) {
+                            try {
+                                if (destroyed) {
+                                    return;
+                                }
+
+                                if (forcePoll.getAndSet(false) || sleepTotalTime > pollInterval) {
+                                    sleepTotalTime = 0L;
+                                    BBBServer server = ServerRepository.getInstance().getServer();
+                                    BigBlueButtonAPI.pollMeetings(server);
+                                }
+
+                                sleepTotalTime += sleepTime;
+                                Thread.sleep(sleepTime);
+                            } catch (InterruptedException e) {
+                            }
+                        }
+                    }
+                }
+        );
+        thPollBBBServers.setName("PollBBBServers");
+        thPollBBBServers.start();
+    }
+
 //	private String getServerIp() throws ServletException {
 //		String ipCommand = Configuration.getConfig("common.detect-ip-command");
 //		String ipAddress = null;
@@ -155,19 +161,18 @@ public class StandaloneAgentServlet extends HttpServlet {
 //		
 //		return ipAddress;
 //	}
-	
-	public static StandaloneAgentServlet getInstance() {
-		if(_instance == null) {
-			log.error("getInstance - Servlet was not initialized yet.");
-		}
-		return _instance;
-	}
+    public static StandaloneAgentServlet getInstance() {
+        if (_instance == null) {
+            log.error("getInstance - Servlet was not initialized yet.");
+        }
+        return _instance;
+    }
 
-	public static String getConfig(String string) {
-		return getInstance().config.get(string.toLowerCase());
-	}
+    public static String getConfig(String string) {
+        return getInstance().config.get(string.toLowerCase());
+    }
 
-	public static String getVersion() {
-		return "v0.019";
-	}
+    public static String getVersion() {
+        return "v0.019";
+    }
 }

@@ -1,6 +1,5 @@
 package org.bbbmanager.agent.standalone.resource;
 
-
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,37 +14,35 @@ import org.xml.sax.SAXException;
 
 /**
  * --
- * 
+ *
  * @author BBBManager Team <team@bbbmanager.org>
- * */
+ *
+ */
 public class EndMeetingResource extends SecuredResource {
-	private static final Logger log = Logger.getLogger(EndMeetingResource.class);
-	
-	@Get
-	public void endMeetingById() {
-		if(checkKey()) {
-			String idString = (String) getRequest().getAttributes().get("meetingID");
-			MeetingRepository dao = MeetingRepository.getInstance();
-			
-			Meeting meeting = dao.getByID(idString);
-			if(meeting == null){
-				getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-				return ;
-			}
-			try {
-				BigBlueButtonAPI.endMeeting(meeting);
-				getResponse().setStatus(Status.SUCCESS_NO_CONTENT);
-				return;
-			} catch (IOException e) {
-				log.error("Error calling endMeetingAPI: " + e.getMessage(), e);
-			} catch (ParserConfigurationException e) {
-				log.error("Error calling endMeetingAPI: " + e.getMessage(), e);
-			} catch (SAXException e) {
-				log.error("Error calling endMeetingAPI: " + e.getMessage(), e);
-			}
-			
-			getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
-			return ;
-		}
-	}
+
+    private static final Logger log = Logger.getLogger(EndMeetingResource.class);
+
+    @Get
+    public void endMeetingById() {
+        if (checkKey()) {
+            String idString = (String) getRequest().getAttributes().get("meetingID");
+            MeetingRepository dao = MeetingRepository.getInstance();
+
+            Meeting meeting = dao.getByID(idString);
+            if (meeting == null) {
+                getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+                return;
+            }
+            try {
+                BigBlueButtonAPI.endMeeting(meeting);
+                getResponse().setStatus(Status.SUCCESS_NO_CONTENT);
+                return;
+            } catch (IOException | ParserConfigurationException | SAXException e) {
+                log.error("Error calling endMeetingAPI: " + e.getMessage(), e);
+            }
+
+            getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
+            return;
+        }
+    }
 }

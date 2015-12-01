@@ -9,19 +9,21 @@ import org.restlet.resource.Get;
 
 /**
  * --
- * 
+ *
  * @author BBBManager Team <team@bbbmanager.org>
- * */
+ *
+ */
 public class MeetingListResource extends SecuredResource {
-	private static final Logger log = Logger.getLogger(MeetingListResource.class);
-	
-	@Get
-	public List<Meeting> getMeetings() {
-		if(checkKey()) {
-			return MeetingRepository.getInstance().getAll();
-		} else {
-			return null;
-		}
-	}
-	
+
+    private static final Logger log = Logger.getLogger(MeetingListResource.class);
+
+    @Get
+    public List<Meeting> getMeetings() {
+        if (checkKey()) {
+            return MeetingRepository.getInstance().getAll();
+        } else {
+            return null;
+        }
+    }
+
 }

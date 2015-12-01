@@ -2,84 +2,86 @@ package org.bbbmanager.agent.common.model.event;
 
 /**
  * --
- * 
+ *
  * @author BBBManager Team <team@bbbmanager.org>
- * */
+ *
+ */
 public class Event {
-	public static final String USER_JOIN="user_join";
-	public static final String USER_LEAVE="user_leave";
-	
-	private String eventName;
-	private String userID;
-	private String userName;
-	private String meetingID;
-	private String meetingName;
-	private Long eventTimestamp;
-	private String eventIPAddress;
-	
-	public Event(String eventName, String userID, String userName, String meetingID, String meetingName, String eventIPAddress) {
-		this.setEventName(eventName);
-		this.setUserID(userID);
-		this.setUserName(userName);
-		this.setMeetingID(meetingID);
-		this.setMeetingName(meetingName);
-		this.setEventTimestamp(System.currentTimeMillis()/1000);
-		this.setEventIPAddress(eventIPAddress);
-	}
 
-	public String getUserID() {
-		return userID;
-	}
+    public static final String USER_JOIN = "user_join";
+    public static final String USER_LEAVE = "user_leave";
 
-	public void setUserID(String userID) {
-		this.userID = userID;
-	}
+    private String eventName;
+    private String userID;
+    private String userName;
+    private String meetingID;
+    private String meetingName;
+    private Long eventTimestamp;
+    private String eventIPAddress;
 
-	public String getUserName() {
-		return userName;
-	}
+    public Event(String eventName, String userID, String userName, String meetingID, String meetingName, String eventIPAddress) {
+        this.setEventName(eventName);
+        this.setUserID(userID);
+        this.setUserName(userName);
+        this.setMeetingID(meetingID);
+        this.setMeetingName(meetingName);
+        this.setEventTimestamp(System.currentTimeMillis() / 1000);
+        this.setEventIPAddress(eventIPAddress);
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public String getUserID() {
+        return userID;
+    }
 
-	public String getMeetingID() {
-		return meetingID;
-	}
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
 
-	public void setMeetingID(String meetingID) {
-		this.meetingID = meetingID;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public String getMeetingName() {
-		return meetingName;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public void setMeetingName(String meetingName) {
-		this.meetingName = meetingName;
-	}
+    public String getMeetingID() {
+        return meetingID;
+    }
 
-	public Long getEventTimestamp() {
-		return eventTimestamp;
-	}
+    public void setMeetingID(String meetingID) {
+        this.meetingID = meetingID;
+    }
 
-	public void setEventTimestamp(Long eventTimestamp) {
-		this.eventTimestamp = eventTimestamp;
-	}
+    public String getMeetingName() {
+        return meetingName;
+    }
 
-	public String getEventName() {
-		return eventName;
-	}
+    public void setMeetingName(String meetingName) {
+        this.meetingName = meetingName;
+    }
 
-	public void setEventName(String eventName) {
-		this.eventName = eventName;
-	}
+    public Long getEventTimestamp() {
+        return eventTimestamp;
+    }
 
-	public String getEventIPAddress() {
-		return eventIPAddress;
-	}
+    public void setEventTimestamp(Long eventTimestamp) {
+        this.eventTimestamp = eventTimestamp;
+    }
 
-	public void setEventIPAddress(String eventIPAddress) {
-		this.eventIPAddress = eventIPAddress;
-	}
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public String getEventIPAddress() {
+        return eventIPAddress;
+    }
+
+    public void setEventIPAddress(String eventIPAddress) {
+        this.eventIPAddress = eventIPAddress;
+    }
 }
