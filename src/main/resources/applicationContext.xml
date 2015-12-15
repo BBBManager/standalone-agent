@@ -23,6 +23,9 @@
         
 	<bean name="/join" class="org.bbbmanager.agent.standalone.resource.JoinResource" scope="prototype" autowire="byName" />
 	<bean name="/join/" class="org.bbbmanager.agent.standalone.resource.JoinResource" scope="prototype" autowire="byName" />
+        
+        <bean name="/kill" class="org.bbbmanager.agent.standalone.resource.KillResource" scope="prototype" autowire="byName" />
+	<bean name="/kill/" class="org.bbbmanager.agent.standalone.resource.KillResource" scope="prototype" autowire="byName" />
 	
 	<bean name="/recordings" class="org.bbbmanager.agent.standalone.resource.RecordingListResource" scope="prototype" autowire="byName" />
 	<bean name="/recordings/" class="org.bbbmanager.agent.standalone.resource.RecordingListResource" scope="prototype" autowire="byName" />
